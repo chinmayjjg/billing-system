@@ -1,25 +1,34 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import { AppError } from '../utils/AppError';
+import { env } from '../config/env';
+
+interface JwtPayload {
+    id: string;
+    email: string;
+    role: string;
+}
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const authHeader = req.headers.authorization;
 
-        // Stub implementation
-        if (!authHeader) {
-            // In a real app, this would throw an error if auth is required
-            // return next(new AppError('No token provided', 401));
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return next(new AppError('No token provided. Please log in.', 401));
         }
 
-        // Mock user
+        const token = authHeader.split(' ')[1];
+
+        const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+
         req.user = {
-            id: 'mock-user-id',
-            email: 'admin@example.com',
-            role: 'admin',
+            id: decoded.id,
+            email: decoded.email,
+            role: decoded.role,
         };
 
         next();
     } catch (error) {
-        next(new AppError('Authentication failed', 401));
+        next(new AppError('Invalid or expired token. Please log in again.', 401));
     }
 };

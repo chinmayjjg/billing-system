@@ -7,5 +7,6 @@ const router = Router();
 router.use(authenticate);
 
 router.post('/', usageController.track);
+router.get('/:subscriptionId/aggregated', usageController.getAggregated);
 
 export default router;

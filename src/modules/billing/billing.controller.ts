@@ -5,7 +5,9 @@ const billingService = new BillingService();
 
 export const calculate = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        res.status(200).json({ success: true, message: 'Not implemented' });
+        const { subscriptionId } = req.params;
+        const billing = await billingService.calculateForSubscription(subscriptionId as string);
+        res.status(200).json({ success: true, data: billing });
     } catch (error) {
         next(error);
     }

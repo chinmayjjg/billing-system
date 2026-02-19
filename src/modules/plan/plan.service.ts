@@ -3,12 +3,12 @@ import { CreatePlanDTO } from './plan.types';
 
 export class PlanService {
     async create(data: CreatePlanDTO) {
-        // TODO: Create plan
-        throw new Error('Not implemented');
+        const plan = await PlanModel.create(data);
+        return plan.toObject();
     }
 
     async findAll() {
-        // TODO: List all plans
-        throw new Error('Not implemented');
+        const plans = await PlanModel.find({ isActive: true });
+        return plans.map(p => p.toObject());
     }
 }

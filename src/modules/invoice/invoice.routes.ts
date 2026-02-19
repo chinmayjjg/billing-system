@@ -7,5 +7,6 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/:id', invoiceController.get);
+router.get('/', invoiceController.list);
 
 export default router;
